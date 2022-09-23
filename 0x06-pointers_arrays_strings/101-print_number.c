@@ -1,5 +1,5 @@
 #include "main.h"
-#inclide "alafara.h"
+#include "alafara.h"
 
 /**
  * print_number - Prints an integer
