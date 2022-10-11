@@ -1,69 +1,90 @@
-#include "dog.h"
+#include <stdio.h>
 #include <stdlib.h>
+#include "dog.h"
+
+int _strlen(char *str);
+char *_strcopy(char *, char *);
 
 /**
- * *_strcpy - Copy the given string
- * @dest: Location to copy string to
- * @src: String to copy to given location
+ * new_dog - Creates a new dog
  *
- * Return: Pointer to dest
- */
-char *_strcpy(char *dest, char *src)
-{
-	int i = 0;
-
-	while (*(src + i) != 0)
-	{
-		*(dest + i) = *(src + i);
-		i++;
-	}
-	*(dest + i) = '\0';
-	return (dest);
-}
-
-/**
- * new_dog - Create a new dog struct
- * @name: Name of dog
- * @age: Age of dog
- * @owner: Owner of dog
+ * @name: Name of the dog
+ * @age: Age of the dog
+ * @owner: Owner of the dog
  *
- * Return: pointer to struct, NULL if fails
+ * Return: Null if function fails
  */
 dog_t *new_dog(char *name, float age, char *owner)
 {
-	dog_t *new_dog;
-	char *new_name;
-	char *new_owner;
+	dog_t *my_dog;
+
+	if (name == NULL || age < 0 || owner == NULL)
+		return (NULL);
+
+	my_dog = malloc(sizeof(dog_t));
+
+	if (my_dog == NULL)
+		return (NULL);
+
+	my_dog->name = malloc(sizeof(char) * (_strlen(name) + 1));
+
+	if (my_dog->name == NULL)
+	{
+		free(my_dog);
+		return (NULL);
+	}
+
+	my_dog->owner = malloc(sizeof(char) * (_strlen(owner) + 1));
+
+	if (my_dog->owner == NULL)
+	{
+		free(my_dog->name);
+		free(my_dog);
+		return (NULL);
+	}
+
+	my_dog->name = _strcopy(my_dog->name, name);
+	my_dog->age = age;
+	my_dog->owner = _strcopy(my_dog->owner, owner);
+
+	return (my_dog);
+}
+
+/**
+ * _strlen - Lenght of string
+ *
+ * @str: Syring to fimd lenght of
+ *
+ * Return: Lenght of @str
+ */
+int _strlen(char *str)
+{
 	int len;
 
-	new_dog = malloc(sizeof(dog_t));
-	if (new_dog == NULL)
-		return (NULL);
-	len = 0;
-	while (name[len] != '\0')
-		len++;
-	len++;
-	new_name = malloc(len * sizeof(*owner));
-	if (new_name == NULL)
+	for (len = 0; str[len] != '\0'; len++)
+		;
+
+	return (len);
+}
+
+/**
+ * _strcopy - Copies string
+ *
+ * @dest: Destination to copy string to
+ * @src: Source to copy string from
+ *
+ * Return: Dedtination of string copied
+ */
+char *_strcopy(char *dest, char *src)
+{
+	int i;
+
+	for (i = 0; src[i] != '\0'; i++)
 	{
-		free(new_dog);
-		return (NULL);
+		dest[i] = src[i];
 	}
-	len = 0;
-	while (name[len] != '\0')
-		len++;
-	len++;
-	new_owner = malloc(len * sizeof(*name));
-	if (new_owner == NULL)
-	{
-		free(new_name);
-		free(new_dog);
-		return (NULL);
-	}
-	_strcpy(new_name, name);
-	_strcpy(new_owner, owner);
-	new_dog->name = new_name;
-	new_dog->age = age;
-	new_dog->owner = new_owner;
-	return (new_dog);
+
+	dest[i] = '\0';
+
+	return (dest);
 }
