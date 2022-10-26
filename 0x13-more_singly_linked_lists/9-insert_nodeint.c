@@ -1,53 +1,48 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include "lists.h"
 
 /**
- * insert_nodeint_at_index - inserts a new node at a given position
- * @head: first element of the list
- * @idx: index of the node we want to insert
- * @n: value of the node
- * Return: the value of a n node.
+ * insert_nodeint_at_index - Insert a new node at given index. Index start at 0
+ * @head: Pointer to the pointer to the start of the list
+ * @index: The index position to add the node at
+ * @n: The value to assign to the data of the node
+ *
+ * Return: Address of the new node, or NULL if it fails or a node cannot be
+ * added at the given index
  */
-listint_t *insert_nodeint_at_index(listint_t **head, unsigned int idx, int n)
+listint_t *insert_nodeint_at_index(listint_t **head, unsigned int index, int n)
 {
-	unsigned int i;
-	struct listint_s *temp = NULL;
-	struct listint_s *new = NULL;
-	int count;
+	listint_t *current;
+	listint_t *new;
+	unsigned int count;
 
+	if (head == NULL)
+		return (NULL);
+	current = *head;
 	count = 0;
-	i = 0;
-	temp = (struct listint_s *)malloc(sizeof(struct listint_s));
-	new = (struct listint_s *)malloc(sizeof(struct listint_s));
-	if (new == NULL || head == NULL || temp == NULL)
+	if (current == NULL && index != 0)
 		return (NULL);
-	if (idx == 0)
-	{
-		temp->n = n;
-		temp->next = *head;
-		*head = temp;
-		return (temp);
-	}
-	if (*head == 0)
+	new = malloc(sizeof(listint_t));
+	if (new == NULL)
 		return (NULL);
-	temp = *head;
 	new->n = n;
-	while (temp != NULL)
+	if (index == 0)
 	{
-		if (temp == NULL)
-			return (NULL);
-		if (i == (idx - 1))
-		{
-			new->next = temp->next;
-			temp->next = new;
-			count = 1;
-			break;
-		}
-		i++;
-		temp = temp->next;
+		new->next = *head;
+		*head = new;
+		return (new);
 	}
-	if (count == 0)
-		return (NULL);
+	while (count != index - 1)
+	{
+		current = current->next;
+		if (current == NULL)
+		{
+			free(new);
+			return (NULL);
+		}
+		count++;
+	}
+	new->next = current->next;
+	current->next = new;
 	return (new);
 }
